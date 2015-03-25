@@ -19,9 +19,9 @@ module gpr (clk,reset,we,a1,a2,a3,wd,rd1,rd2);
       end // if(we)
    end
 
-   assign rd1=(we & a1==a3)?g[a3]:
+   assign rd1=(we & a1==a3)?wd:
               g[a1];
-   assign rd2=(we & a2==a3)?g[a3]:
+   assign rd2=(we & a2==a3)?wd:
               g[a2];
 
 endmodule

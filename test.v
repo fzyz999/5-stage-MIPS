@@ -16,9 +16,11 @@ module test_mips (/*port details*/);
    end
 
    initial begin
+      /*$monitor("%t IF(%x) ID(%x) EX(%x) MEM(%x) WB(%x)",$time,
+               _mips.instr,_mips.instrD,_mips.instrE,_mips.instrM,_mips.instrW);*/
       #9999
         for (i=0; i!=1024; i=i+8) begin
-           $display("%d %d %d %d %d %d %d %d",
+           $display("%x %x %x %x %x %x %x %x",
                _mips._dm.dm[i],
                _mips._dm.dm[i+1],
                _mips._dm.dm[i+2],
@@ -28,7 +30,6 @@ module test_mips (/*port details*/);
                _mips._dm.dm[i+6],
                _mips._dm.dm[i+7]);
         end
-
    end
 
 
