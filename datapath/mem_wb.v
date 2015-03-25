@@ -12,11 +12,11 @@ module mem_wb (clk,rst,instrM,MemAddrE,ReadDataM,ALUOutM,pcplusM,
 
    always @(posedge clk or posedge rst) begin
       if (rst) begin
-         _pcplus<=_pcplus<=32'h0000_3008;
          _instr<=32'h0;
          _readdata<=32'h0;
          _aluout<=32'h0;
          _memaddr<=2'b0;
+         _pcplus<=pcplusM;
       end
       else begin
          _instr<=instrM;

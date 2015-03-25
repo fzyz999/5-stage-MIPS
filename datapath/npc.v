@@ -21,6 +21,7 @@ module npc (npcop,pcplus,pcplusD,offset,absaddress,address);
 
    assign address=(npcop==2'b00)?pcplus:
                   (npcop==2'b01)?pcplusD+offset32:
-                  absaddress;
+                  (npcop==2'b10)?absaddress:
+                  32'h0000_4180;
 
 endmodule

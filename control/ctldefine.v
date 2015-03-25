@@ -37,6 +37,11 @@
 `define MTHI_R 6'b01_0001
 `define MTLO_R 6'b01_0011
 
+`define COP0 6'b01_0000
+`define MF 5'b00000
+`define MT 5'b00100
+`define ERET_R 6'b01_1000
+
 `define LB 6'b10_0000
 `define LBU 6'b10_0100
 `define LH 6'b10_0001
@@ -76,7 +81,7 @@
 `define STORE (sb|sh|sw)
 `define ALL_BTYPE (beq|bne|blez|bgtz|bltz|bgez)
 
-`define ALL_SUPPORT_INSTR add,addu,sub,subu,mult,multu,div,divu,ori,lb,lbu,lh,lhu,lw,sb,sh,sw,beq,bne,blez,bgtz,bltz,bgez,lui,jal,jalr,addi,slt,slti,sltiu,sltu,jr,addiu,j,sll,srl,sra,sllv,srlv,srav,andi,xori,and_r,or_r,nor_r,xor_r,mfhi,mflo,mthi,mtlo
+`define ALL_SUPPORT_INSTR add,addu,sub,subu,mult,multu,div,divu,ori,lb,lbu,lh,lhu,lw,sb,sh,sw,beq,bne,blez,bgtz,bltz,bgez,lui,jal,jalr,addi,slt,slti,sltiu,sltu,jr,addiu,j,sll,srl,sra,sllv,srlv,srav,andi,xori,and_r,or_r,nor_r,xor_r,mfhi,mflo,mthi,mtlo,mfc0,mtc0,eret
 
 `ifndef CTLDEFINE_V
 `define CTLDEFINE_V ctldefine
@@ -85,7 +90,7 @@
 
 module parse_instr (input [31:0] instr,
                     output      `ALL_SUPPORT_INSTR);
-   wire                         rtype,regimm;
+   wire                         rtype,regimm,cop0;
 
    wire [5:0]                  OpCode;
    wire [5:0]                  Funct;
@@ -158,11 +163,17 @@ module parse_instr (input [31:0] instr,
    assign mflo=rtype&(Funct==`MFLO_R);
    assign mfhi=rtype&(Funct==`MFHI_R);
 
+   assign cop0=(OpCode==`COP0);
+   assign mtc0=cop0&(instr[`RS]==`MT);
+   assign mfc0=cop0&(instr[`RS]==`MF);
+   assign eret=cop0&(Funct==`ERET_R);
+
 endmodule // parse_instr
 
-module processInstr (instr,cal_r,cal_i,ld,st,brs,brt,jr_o,jal_o,muldiv);
+module processInstr (instr,cal_r,cal_i,ld,st,brs,brt,jr_o,jal_o,muldiv,mtc0_o,mfc0_o);
    input [31:0] instr;
    output       cal_r,cal_i,ld,st,brs,brt,jr_o,jal_o,muldiv;
+   output       mtc0_o,mfc0_o;
    wire         `ALL_SUPPORT_INSTR;
 
    parse_instr parser(instr,`ALL_SUPPORT_INSTR);
@@ -175,6 +186,8 @@ module processInstr (instr,cal_r,cal_i,ld,st,brs,brt,jr_o,jal_o,muldiv);
    assign brs=`ALL_BTYPE;
    assign jr_o=jr|jalr;
    assign jal_o=jal;
+   assign mtc0_o=mtc0;
+   assign mfc0_o=mfc0;
    assign muldiv=mult|multu|div|divu|mfhi|mflo|mthi|mtlo;
 
 endmodule // processInstr

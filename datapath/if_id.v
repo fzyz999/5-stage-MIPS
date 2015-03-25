@@ -10,7 +10,7 @@ module if_id (clk,rst,enable,instr,pcplus,instrD,pcplusD);
 
    always @(posedge clk or posedge rst) begin
       if (rst) begin
-         _pcplus<=32'h0000_3004;
+         _pcplus<=pcplus;
          _instr<=32'h0000_0000;
       end // if(rst)
       else if (enable) begin
