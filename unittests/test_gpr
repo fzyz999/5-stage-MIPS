@@ -1,0 +1,151 @@
+#! /usr/bin/vvp
+:ivl_version "0.9.6 " "(v0_9_6)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x191b010 .scope module, "test_gpr" "test_gpr" 2 1;
+ .timescale 0 0;
+v0x1956170_0 .var "addr", 4 0;
+v0x1956210_0 .var "addr2", 4 0;
+v0x1956290_0 .var "clk", 0 0;
+v0x1956310_0 .var "data", 31 0;
+v0x19563f0_0 .net "dout", 31 0, L_0x1955ea0; 1 drivers
+v0x19564a0_0 .net "dout2", 31 0, L_0x1956900; 1 drivers
+v0x1956520_0 .var "reset", 0 0;
+v0x19565d0_0 .var "we", 0 0;
+E_0x191b700 .event negedge, v0x1955b50_0;
+S_0x1940c60 .scope module, "g" "gpr" 2 7, 3 1, S_0x191b010;
+ .timescale 0 0;
+L_0x1955ea0 .functor BUFZ 32, L_0x19566d0, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+L_0x1956900 .functor BUFZ 32, L_0x1956860, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+v0x191b660_0 .net *"_s0", 31 0, L_0x19566d0; 1 drivers
+v0x19558b0_0 .net *"_s4", 31 0, L_0x1956860; 1 drivers
+v0x1955950_0 .net "a1", 4 0, v0x1956170_0; 1 drivers
+v0x19559f0_0 .net "a2", 4 0, v0x1956210_0; 1 drivers
+v0x1955aa0_0 .alias "a3", 4 0, v0x19559f0_0;
+v0x1955b50_0 .net "clk", 0 0, v0x1956290_0; 1 drivers
+v0x1955c10 .array "g", 0 31, 31 0;
+v0x1955c90_0 .var/i "i", 31 0;
+v0x1955d80_0 .alias "rd1", 31 0, v0x19563f0_0;
+v0x1955e20_0 .alias "rd2", 31 0, v0x19564a0_0;
+v0x1955f20_0 .net "reset", 0 0, v0x1956520_0; 1 drivers
+v0x1955fc0_0 .net "wd", 31 0, v0x1956310_0; 1 drivers
+v0x19560d0_0 .net "we", 0 0, v0x19565d0_0; 1 drivers
+E_0x191b150 .event posedge, v0x1955b50_0;
+E_0x192e010 .event edge, v0x1955f20_0;
+L_0x19566d0 .array/port v0x1955c10, v0x1956170_0;
+L_0x1956860 .array/port v0x1955c10, v0x1956210_0;
+    .scope S_0x1940c60;
+T_0 ;
+    %wait E_0x192e010;
+    %load/v 8, v0x1955f20_0, 1;
+    %jmp/0xz  T_0.0, 8;
+    %set/v v0x1955c90_0, 0, 32;
+T_0.2 ;
+    %load/v 8, v0x1955c90_0, 32;
+    %cmpi/u 8, 32, 32;
+    %inv 4, 1;
+    %jmp/0xz T_0.3, 4;
+    %ix/getv/s 3, v0x1955c90_0;
+    %jmp/1 t_0, 4;
+    %ix/load 0, 32, 0; word width
+    %ix/load 1, 0, 0; part off
+    %assign/av v0x1955c10, 0, 0;
+t_0 ;
+    %ix/load 0, 1, 0;
+    %load/vp0/s 8, v0x1955c90_0, 32;
+    %set/v v0x1955c90_0, 8, 32;
+    %jmp T_0.2;
+T_0.3 ;
+T_0.0 ;
+    %jmp T_0;
+    .thread T_0, $push;
+    .scope S_0x1940c60;
+T_1 ;
+    %wait E_0x191b150;
+    %load/v 8, v0x19560d0_0, 1;
+    %jmp/0xz  T_1.0, 8;
+    %load/v 8, v0x1955aa0_0, 5;
+    %cmpi/u 8, 0, 5;
+    %inv 4, 1;
+    %jmp/0xz  T_1.2, 4;
+    %load/v 8, v0x1955fc0_0, 32;
+    %ix/getv 3, v0x1955aa0_0;
+    %jmp/1 t_1, 4;
+    %ix/load 0, 32, 0; word width
+    %ix/load 1, 0, 0; part off
+    %assign/av v0x1955c10, 0, 8;
+t_1 ;
+T_1.2 ;
+T_1.0 ;
+    %jmp T_1;
+    .thread T_1;
+    .scope S_0x191b010;
+T_2 ;
+    %set/v v0x19565d0_0, 1, 1;
+    %set/v v0x1956520_0, 1, 1;
+    %set/v v0x1956290_0, 0, 1;
+    %set/v v0x1956170_0, 0, 5;
+    %set/v v0x1956210_0, 0, 5;
+    %movi 8, 5, 32;
+    %set/v v0x1956310_0, 8, 32;
+    %delay 20, 0;
+    %set/v v0x1956520_0, 0, 1;
+    %end;
+    .thread T_2;
+    .scope S_0x191b010;
+T_3 ;
+    %delay 5, 0;
+    %load/v 8, v0x1956290_0, 1;
+    %inv 8, 1;
+    %set/v v0x1956290_0, 8, 1;
+    %jmp T_3;
+    .thread T_3;
+    .scope S_0x191b010;
+T_4 ;
+    %wait E_0x191b700;
+    %load/v 8, v0x19565d0_0, 1;
+    %inv 8, 1;
+    %set/v v0x19565d0_0, 8, 1;
+    %load/v 8, v0x1956310_0, 32;
+    %mov 40, 0, 1;
+    %addi 8, 1, 33;
+    %ix/load 0, 32, 0;
+    %assign/v0 v0x1956310_0, 0, 8;
+    %load/v 8, v0x19565d0_0, 1;
+    %jmp/0xz  T_4.0, 8;
+    %load/v 8, v0x1956170_0, 5;
+    %ix/load 0, 5, 0;
+    %assign/v0 v0x1956210_0, 0, 8;
+    %load/v 8, v0x1956170_0, 5;
+    %mov 13, 0, 27;
+    %addi 8, 1, 32;
+    %ix/load 0, 5, 0;
+    %assign/v0 v0x1956170_0, 0, 8;
+T_4.0 ;
+    %jmp T_4;
+    .thread T_4;
+    .scope S_0x191b010;
+T_5 ;
+    %delay 200, 0;
+    %vpi_call 2 31 "$finish";
+    %end;
+    .thread T_5;
+    .scope S_0x191b010;
+T_6 ;
+    %vpi_call 2 35 "$monitor", "time %t we %d addr %d dout %d dout2 %d", $time, v0x19565d0_0, v0x1956170_0, v0x19563f0_0, v0x19564a0_0;
+    %end;
+    .thread T_6;
+    .scope S_0x191b010;
+T_7 ;
+    %vpi_call 2 39 "$dumpfile", "test_gpr.lxt";
+    %vpi_call 2 40 "$dumpvars", 1'sb0, S_0x191b010;
+    %end;
+    .thread T_7;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "test_gpr.v";
+    "../datapath/gpr.v";

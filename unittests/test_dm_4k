@@ -1,0 +1,106 @@
+#! /usr/bin/vvp
+:ivl_version "0.9.6 " "(v0_9_6)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x15f2d50 .scope module, "test_dm_4k" "test_dm_4k" 2 1;
+ .timescale 0 0;
+v0x1627ff0_0 .var "addr", 9 0;
+v0x1628090_0 .var "clk", 0 0;
+v0x1628140_0 .var "data", 31 0;
+v0x16281f0_0 .net "dout", 31 0, L_0x1628470; 1 drivers
+v0x16282d0_0 .var "we", 0 0;
+E_0x15f2660 .event negedge, v0x1627ca0_0;
+S_0x1616090 .scope module, "dm" "dm_4k" 2 7, 3 1, S_0x15f2d50;
+ .timescale 0 0;
+L_0x1628470 .functor BUFZ 32, L_0x1628380, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+v0x15f0670_0 .net *"_s0", 31 0, L_0x1628380; 1 drivers
+v0x1627c00_0 .net "addr", 11 2, v0x1627ff0_0; 1 drivers
+v0x1627ca0_0 .net "clk", 0 0, v0x1628090_0; 1 drivers
+v0x1627d40_0 .net "din", 31 0, v0x1628140_0; 1 drivers
+v0x1627df0 .array "dm", 0 1023, 31 0;
+v0x1627e70_0 .alias "dout", 31 0, v0x16281f0_0;
+v0x1627f50_0 .net "we", 0 0, v0x16282d0_0; 1 drivers
+E_0x15f0710 .event posedge, v0x1627ca0_0;
+L_0x1628380 .array/port v0x1627df0, v0x1627ff0_0;
+    .scope S_0x1616090;
+T_0 ;
+    %wait E_0x15f0710;
+    %load/v 8, v0x1627f50_0, 1;
+    %jmp/0xz  T_0.0, 8;
+    %load/v 8, v0x1627d40_0, 32;
+    %ix/getv 3, v0x1627c00_0;
+    %jmp/1 t_0, 4;
+    %ix/load 0, 32, 0; word width
+    %ix/load 1, 0, 0; part off
+    %assign/av v0x1627df0, 0, 8;
+t_0 ;
+T_0.0 ;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_0x1616090;
+T_1 ;
+    %vpi_call 3 22 "$readmemh", "data.txt", v0x1627df0;
+    %end;
+    .thread T_1;
+    .scope S_0x15f2d50;
+T_2 ;
+    %set/v v0x16282d0_0, 1, 1;
+    %set/v v0x1628090_0, 0, 1;
+    %set/v v0x1627ff0_0, 0, 10;
+    %set/v v0x1628140_0, 0, 32;
+    %end;
+    .thread T_2;
+    .scope S_0x15f2d50;
+T_3 ;
+    %delay 5, 0;
+    %load/v 8, v0x1628090_0, 1;
+    %inv 8, 1;
+    %set/v v0x1628090_0, 8, 1;
+    %jmp T_3;
+    .thread T_3;
+    .scope S_0x15f2d50;
+T_4 ;
+    %wait E_0x15f2660;
+    %load/v 8, v0x16282d0_0, 1;
+    %inv 8, 1;
+    %set/v v0x16282d0_0, 8, 1;
+    %load/v 8, v0x1628140_0, 32;
+    %mov 40, 0, 1;
+    %addi 8, 1, 33;
+    %ix/load 0, 32, 0;
+    %assign/v0 v0x1628140_0, 0, 8;
+    %load/v 8, v0x16282d0_0, 1;
+    %jmp/0xz  T_4.0, 8;
+    %load/v 8, v0x1627ff0_0, 10;
+    %mov 18, 0, 22;
+    %addi 8, 4, 32;
+    %ix/load 0, 10, 0;
+    %assign/v0 v0x1627ff0_0, 0, 8;
+T_4.0 ;
+    %jmp T_4;
+    .thread T_4;
+    .scope S_0x15f2d50;
+T_5 ;
+    %delay 200, 0;
+    %vpi_call 2 28 "$finish";
+    %end;
+    .thread T_5;
+    .scope S_0x15f2d50;
+T_6 ;
+    %vpi_call 2 32 "$monitor", "time %t we %d addr %d dout %d", $time, v0x16282d0_0, v0x1627ff0_0, v0x16281f0_0;
+    %end;
+    .thread T_6;
+    .scope S_0x15f2d50;
+T_7 ;
+    %vpi_call 2 36 "$dumpfile", "test_dm_4k.lxt";
+    %vpi_call 2 37 "$dumpvars", 1'sb0, S_0x15f2d50;
+    %end;
+    .thread T_7;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "test_dm_4k.v";
+    "../datapath/dm.v";
