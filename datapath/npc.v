@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module signext (offset16,offset32);
    input [15:0]  offset16;
    output [31:0] offset32;

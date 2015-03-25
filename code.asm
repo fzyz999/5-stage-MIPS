@@ -5,6 +5,7 @@
 	fib2:	.word 0:40
 	stack:	.word 0:500
 .text
+main:
 	nop
 	jal	T1
 	la	$s6,fib

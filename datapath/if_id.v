@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module if_id (clk,rst,enable,instr,pcplus,instrD,pcplusD);
    input         clk,enable,rst;
    input [31:0]  instr,pcplus;

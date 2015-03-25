@@ -14,14 +14,16 @@ module gpr (clk,reset,we,a1,a2,a3,wd,rd1,rd2);
             g[i]<=0;
       end // if(reset)
       else if (we) begin
-         if(a3)
-           g[a3]<=wd;
+         if(a3) begin
+            g[a3]<=wd;
+            $display("%d %x",a3,wd);
+         end
       end // if(we)
    end
 
-   assign rd1=(we & a1==a3)?wd:
+   assign rd1=(we & a1==a3 & a3!=0)?wd:
               g[a1];
-   assign rd2=(we & a2==a3)?wd:
+   assign rd2=(we & a2==a3 & a3!=0)?wd:
               g[a2];
 
 endmodule
